@@ -8,12 +8,14 @@ using ServiceStack.WebHost.Endpoints;
 
 namespace Skeleton_ServiceStack
 {
-    public class Global : System.Web.HttpApplication
+	using ServiceStack.FluentValidation;
+	using ServiceStack.ServiceInterface.Validation;
+
+	public class Global : System.Web.HttpApplication
     {
 
         public class CaseAppHost : AppHostBase
         {
-            //Tell Service Stack the name of your application and where to find your web services
             public CaseAppHost() : base("Case Web Services", typeof (CaseService).Assembly)
             {
                 
@@ -21,9 +23,6 @@ namespace Skeleton_ServiceStack
 
             public override void Configure(Funq.Container container)
             {
-                //register any dependencies your services use, e.g:
-                //container.Register<ICacheClient>(new MemoryCacheClient());
-
                 Plugins.Add(
                     new AuthFeature(() =>
                         new AuthUserSession(),
@@ -33,6 +32,11 @@ namespace Skeleton_ServiceStack
                         }));
 
                 Plugins.Add(new RegistrationFeature());
+				Plugins.Add(new ValidationFeature());
+
+                container.Register<ICaseRepository>(new InMemoryCaseRepository());
+				container.Register<IReferenceValidator>(new ReferenceValidator(new InMemoryCaseRepository()));
+				container.RegisterValidators(typeof(CaseValidator).Assembly);
 
                 container.Register<ICacheClient>(new MemoryCacheClient());
                 var userRep = new InMemoryAuthRepository();

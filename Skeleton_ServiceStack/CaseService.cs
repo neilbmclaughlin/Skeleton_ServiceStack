@@ -1,11 +1,19 @@
-﻿using System.Collections.Generic;
-
-namespace Skeleton_ServiceStack
+﻿namespace Skeleton_ServiceStack
 {
-    using ServiceStack.ServiceInterface;
-    public class CaseService : Service
+	using ServiceStack.FluentValidation;
+	using ServiceStack.ServiceInterface;
+	using ServiceStack.ServiceInterface.Validation;
+
+	public class CaseService : Service
     {
-        public enum Status
+		private readonly ICaseRepository caseRepository;
+
+		public CaseService(ICaseRepository caseRepository)
+		{
+			this.caseRepository = caseRepository;
+		}
+
+		public enum Status
         {
             Open,
             PendingClientAction,
@@ -13,14 +21,17 @@ namespace Skeleton_ServiceStack
             Closed
         }
 
-        private readonly Dictionary<string, CaseResponse> _caseList = new Dictionary<string, CaseResponse>
-        {
-            { "123456K", new CaseResponse { Reference = "123456K", ClientName = "Joe Blogs", Status = Status.PendingClientAction } },
-        };
+		public IValidator<Case> Validator { get; set; }
 
-        public object Any(Case request)
+        public object Get(Case request)
         {
-            return _caseList[request.Reference];
-        }
+	        var result = this.Validator.Validate(request);
+
+	        if (!result.IsValid)
+	        {
+		        throw result.ToException();
+	        }
+			return caseRepository.GetCaseByReference(request.Reference);
+		}
     }
 }
