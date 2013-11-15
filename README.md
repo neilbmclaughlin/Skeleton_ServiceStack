@@ -11,3 +11,4 @@ Links
  * https://www.stormpath.com/blog/designing-rest-json-apis
  * http://security.stackexchange.com/questions/19930/how-do-i-secure-my-rest-api
  * http://www.jamesward.com/2013/05/13/securing-single-page-apps-and-rest-services
+ * http://www.ibuildings.com/blog/2013/03/secure-your-rest-api-oauth2-implicit-grant
