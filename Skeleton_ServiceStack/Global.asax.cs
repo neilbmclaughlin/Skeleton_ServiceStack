@@ -28,6 +28,7 @@ namespace Skeleton_ServiceStack
                         new AuthUserSession(),
                         new IAuthProvider[]
                         {
+                            new DigestAuthProvider(),
                             new BasicAuthProvider()
                         }));
 
@@ -44,7 +45,9 @@ namespace Skeleton_ServiceStack
 
                 string hash;
                 string salt;
-                new SaltedHash().GetHashAndSaltString("password", out hash, out salt);
+	            string password = "password";
+
+	            new SaltedHash().GetHashAndSaltString(password, out hash, out salt);
 
                 userRep.CreateUserAuth(new UserAuth
                 {
@@ -56,7 +59,7 @@ namespace Skeleton_ServiceStack
                     Email = "joe@bloggs.com",
                     Salt = salt,
                     PasswordHash = hash
-                }, "password");
+                }, password);
             }
         }
 
