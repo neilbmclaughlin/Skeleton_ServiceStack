@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Security.Policy;
+
 using ServiceStack.CacheAccess;
 using ServiceStack.CacheAccess.Providers;
 using ServiceStack.ServiceInterface;
@@ -8,15 +8,30 @@ using ServiceStack.WebHost.Endpoints;
 
 namespace Skeleton_ServiceStack
 {
-	using ServiceStack.FluentValidation;
+	using ServiceStack.Razor;
 	using ServiceStack.ServiceInterface.Validation;
+
+	public enum Status
+	{
+		Open,
+		PendingClientAction,
+		PendingFeeEarnerAction,
+		Closed
+	}
+
+	public class Case
+	{
+		public string Reference { get; set; }
+		public string ClientName { get; set; }
+		public Status Status { get; set; }
+	}
 
 	public class Global : System.Web.HttpApplication
     {
 
         public class CaseAppHost : AppHostBase
         {
-            public CaseAppHost() : base("Case Web Services", typeof (CaseService).Assembly)
+            public CaseAppHost() : base("Case Web Services", typeof (CasesService).Assembly)
             {
                 
             }
@@ -34,6 +49,7 @@ namespace Skeleton_ServiceStack
 
                 Plugins.Add(new RegistrationFeature());
 				Plugins.Add(new ValidationFeature());
+				Plugins.Add(new RazorFormat());
 
                 container.Register<ICaseRepository>(new InMemoryCaseRepository());
 				container.Register<IReferenceValidator>(new ReferenceValidator(new InMemoryCaseRepository()));

@@ -1,0 +1,22 @@
+﻿@inherits ViewPage<CasesResponse>
+			  
+<h3>We have @Model.Cases.Count() cases</h3>
+<table>
+    <thead> 
+        <tr>
+            <th>Ref</th>
+            <th>Client</th>
+            <th>Status</th> 
+        </tr>
+    </thead> 
+    <tbody>
+        @foreach (var mlCase in Model.Cases)
+        {
+            <tr>
+                <td>@mlCase.Reference</td>
+                <td>@mlCase.ClientName</td>     
+                <td>@mlCase.Status</td>     
+            </tr>
+        }
+    </tbody>
+</table>
