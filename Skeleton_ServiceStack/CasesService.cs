@@ -7,7 +7,7 @@
 
 	[Route("/cases")]
 	[Route("/cases/{Reference}")]
-	//[Authenticate]
+	[Authenticate]
 	public class Cases
 	{
 		public string Reference { get; set; }
@@ -38,5 +38,5 @@
 							Cases = caseRepository.GetCasesByReference(request.Reference)
 						};
         }
-    }
+    }	
 }
